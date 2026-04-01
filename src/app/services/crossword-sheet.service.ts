@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, pipe, tap } from 'rxjs';
 
 import { Crossword } from '../models/crossword.model';
 
 const SHEET_CONFIG = {
   // Replace with your sheet ID once your public sheet exists.
-  sheetId: 'REPLACE_WITH_PUBLIC_SHEET_ID',
+  sheetId: '1muqUGDvCWFnIlWk_o5pQbPAY9IiuXSG1FkmQslXWDs0',
   worksheet: '0',
-  query: 'select A,B,C,D,E where A is not null'
+  query: 'select A,B,C,D,E,F, G where A <> "id"',
 } as const;
 
 interface GvizCell {
@@ -35,7 +35,9 @@ export class CrosswordSheetService {
   }
 
   getCrosswordById(id: string): Observable<Crossword | undefined> {
-    return this.fetchCrosswords().pipe(map((crosswords) => crosswords.find((crossword) => crossword.id === id)));
+    return this.fetchCrosswords().pipe(
+      map((crosswords) => crosswords.find((crossword) => crossword.id === id)),
+    );
   }
 
   private fetchCrosswords(): Observable<Crossword[]> {
@@ -47,12 +49,22 @@ export class CrosswordSheetService {
 
     return this.http.get(endpoint, { params, responseType: 'text' }).pipe(
       map((response) => this.extractPayload(response)),
-      map((payload) => this.parseRows(payload)),
+      map((payload) => {
+        const parsed = this.parseRows(payload);
+        console.log('parsed', parsed);
+        return parsed;
+      }),
       map((crosswords) =>
         crosswords
-          .filter((crossword) => crossword.id.length > 0 && crossword.title.length > 0 && crossword.puzzleUrl.length > 0)
-          .sort((a, b) => b.publishDate.getTime() - a.publishDate.getTime())
-      )
+          .filter(
+            (crossword) =>
+              crossword.id.length > 0 &&
+              crossword.id !== 'id' && //header row
+              crossword.title.length > 0 &&
+              crossword.puzzleUrl.length > 0,
+          )
+          .sort((a, b) => b.publishDate.getTime() - a.publishDate.getTime()),
+      ),
     );
   }
 
@@ -61,7 +73,9 @@ export class CrosswordSheetService {
     const end = rawResponse.lastIndexOf('}');
 
     if (start === -1 || end === -1 || end <= start) {
-      throw new Error('Unable to parse Google Sheet response. Check sheet visibility and configuration.');
+      throw new Error(
+        'Unable to parse Google Sheet response. Check sheet visibility and configuration.',
+      );
     }
 
     return JSON.parse(rawResponse.slice(start, end + 1)) as GvizResponse;
@@ -72,15 +86,29 @@ export class CrosswordSheetService {
       const id = this.getTextValue(row.c[0]);
       const title = this.getTextValue(row.c[1]);
       const publishDate = this.parseDateValue(row.c[2]);
-      const description = this.getTextValue(row.c[3]);
-      const puzzleUrl = this.getTextValue(row.c[4]);
+      const difficulty = this.getTextValue(row.c[3]);
+      const description = this.getTextValue(row.c[4]);
+      const author = this.getTextValue(row.c[5]);
+      const puzzleUrl = this.getTextValue(row.c[6]);
+
+      console.log(row, {
+        id,
+        title,
+        publishDate,
+        difficulty,
+        description,
+        author,
+        puzzleUrl,
+      });
 
       return {
         id,
         title,
         publishDate,
+        difficulty,
         description,
-        puzzleUrl
+        author,
+        puzzleUrl,
       };
     });
   }
@@ -114,7 +142,7 @@ export class CrosswordSheetService {
         Number(day),
         Number(hours),
         Number(minutes),
-        Number(seconds)
+        Number(seconds),
       );
     }
 

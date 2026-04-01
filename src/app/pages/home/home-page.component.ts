@@ -9,7 +9,7 @@ import { CrosswordSheetService } from '../../services/crossword-sheet.service';
 @Component({
   selector: 'app-home-page',
   imports: [RouterLink, DatePipe],
-  templateUrl: './home-page.component.html'
+  templateUrl: './home-page.component.html',
 })
 export class HomePageComponent {
   private readonly crosswordSheetService = inject(CrosswordSheetService);
@@ -37,11 +37,11 @@ export class HomePageComponent {
         },
         error: () => {
           this.errorMessage.set(
-            'Unable to load crossword posts from Google Sheets. Add your public sheet ID in the crossword service and try again.'
+            'Unable to load crossword posts from Google Sheets. Add your public sheet ID in the crossword service and try again.',
           );
           this.crosswords.set([]);
           this.isLoading.set(false);
-        }
+        },
       });
   }
 }
