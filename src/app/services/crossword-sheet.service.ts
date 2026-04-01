@@ -8,7 +8,7 @@ const SHEET_CONFIG = {
   // Replace with your sheet ID once your public sheet exists.
   sheetId: '1muqUGDvCWFnIlWk_o5pQbPAY9IiuXSG1FkmQslXWDs0',
   worksheet: '0',
-  query: 'select A,B,C,D,E,F, G where A <> "id"',
+  query: 'select A,B,C,D,E,F,G,H where A <> "id"',
 } as const;
 
 interface GvizCell {
@@ -59,7 +59,6 @@ export class CrosswordSheetService {
           .filter(
             (crossword) =>
               crossword.id.length > 0 &&
-              crossword.id !== 'id' && //header row
               crossword.title.length > 0 &&
               crossword.puzzleUrl.length > 0,
           )
@@ -90,6 +89,7 @@ export class CrosswordSheetService {
       const description = this.getTextValue(row.c[4]);
       const author = this.getTextValue(row.c[5]);
       const puzzleUrl = this.getTextValue(row.c[6]);
+      const linkUrl = this.getTextValue(row.c[7]);
 
       console.log(row, {
         id,
@@ -99,6 +99,7 @@ export class CrosswordSheetService {
         description,
         author,
         puzzleUrl,
+        linkUrl,
       });
 
       return {
@@ -109,6 +110,7 @@ export class CrosswordSheetService {
         description,
         author,
         puzzleUrl,
+        linkUrl,
       };
     });
   }

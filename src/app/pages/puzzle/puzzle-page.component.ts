@@ -6,11 +6,14 @@ import { of, switchMap } from 'rxjs';
 
 import { Crossword } from '../../models/crossword.model';
 import { CrosswordSheetService } from '../../services/crossword-sheet.service';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { heroArrowLeftSolid } from '@ng-icons/heroicons/solid';
 
 @Component({
   selector: 'app-puzzle-page',
-  imports: [RouterLink],
-  templateUrl: './puzzle-page.component.html'
+  imports: [RouterLink, NgIcon],
+  providers: [provideIcons({ heroArrowLeftSolid })],
+  templateUrl: './puzzle-page.component.html',
 })
 export class PuzzlePageComponent {
   private readonly route = inject(ActivatedRoute);
@@ -34,7 +37,7 @@ export class PuzzlePageComponent {
 
           return this.crosswordSheetService.getCrosswordById(id);
         }),
-        takeUntilDestroyed(this.destroyRef)
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (crossword) => {
@@ -55,7 +58,7 @@ export class PuzzlePageComponent {
         },
         error: () => {
           this.router.navigate(['/'], { replaceUrl: true });
-        }
+        },
       });
   }
 

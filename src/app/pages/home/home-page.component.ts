@@ -5,11 +5,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Crossword } from '../../models/crossword.model';
 import { CrosswordSheetService } from '../../services/crossword-sheet.service';
+import { heroPlaySolid, heroLinkSolid, heroCalendarSolid } from '@ng-icons/heroicons/solid';
+import { NgIcon, provideIcons } from '@ng-icons/core';
 
 @Component({
   selector: 'app-home-page',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, NgIcon],
   templateUrl: './home-page.component.html',
+  providers: [provideIcons({ heroPlaySolid, heroLinkSolid, heroCalendarSolid })],
 })
 export class HomePageComponent {
   private readonly crosswordSheetService = inject(CrosswordSheetService);
