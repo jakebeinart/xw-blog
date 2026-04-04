@@ -8,14 +8,14 @@
   } @else if (crossword() && safePuzzleUrl()) {
     <div class="space-y-6">
       <a
-        class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-500 hover:text-slate-900"
+        class="mx-4 inline-flex items-center gap-2 text-sm font-semibold text-slate-700 transition hover:border-slate-500 hover:text-slate-900"
         routerLink="/"
       >
         <ng-icon name="heroArrowLeftSolid"></ng-icon>
         Back to all crosswords
       </a>
 
-      <header class="space-y-3">
+      <header class="space-y-3 mx-4">
         <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl">{{ crossword()!.title }}</h1>
         <p class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
           By {{ crossword()!.author }}
