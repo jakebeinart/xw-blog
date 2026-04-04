@@ -2,7 +2,7 @@ export interface Crossword {
   id: string;
   title: string;
   author: string;
-  difficulty: string;
+  difficulty: number;
   publishDate: Date;
   description: string;
   puzzleUrl: string;

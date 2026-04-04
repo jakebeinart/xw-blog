@@ -85,22 +85,11 @@ export class CrosswordSheetService {
       const id = this.getTextValue(row.c[0]);
       const title = this.getTextValue(row.c[1]);
       const publishDate = this.parseDateValue(row.c[2]);
-      const difficulty = this.getTextValue(row.c[3]);
+      const difficulty = Number(row.c[3]?.v);
       const description = this.getTextValue(row.c[4]);
       const author = this.getTextValue(row.c[5]);
       const puzzleUrl = this.getTextValue(row.c[6]);
       const linkUrl = this.getTextValue(row.c[7]);
-
-      console.log(row, {
-        id,
-        title,
-        publishDate,
-        difficulty,
-        description,
-        author,
-        puzzleUrl,
-        linkUrl,
-      });
 
       return {
         id,
